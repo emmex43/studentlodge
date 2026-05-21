@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .models import House
 
@@ -33,3 +33,13 @@ def home_feed(request):
         'selected_location': location
     }
     return render(request, 'housing/home_feed.html', context)
+
+
+# Add this new view:
+
+
+def house_detail(request, id):
+    # This safely looks for the house, and returns a 404 Error if it doesn't exist
+    house = get_object_or_404(House, id=id)
+
+    return render(request, 'housing/house_detail.html', {'house': house})

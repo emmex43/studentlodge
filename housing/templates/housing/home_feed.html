@@ -37,7 +37,7 @@
     <main class="max-w-2xl mx-auto px-4 py-8 space-y-10">
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6">
-            <form method="GET" action="{% url 'home' %}" class="flex flex-col gap-3">
+            <form method="GET" action="{% url 'housing:home_feed' %}" class="flex flex-col gap-3">
 
                 <div class="w-full">
                     <label for="q" class="sr-only">Search</label>
@@ -76,7 +76,7 @@
 
                 {% if query or selected_location %}
                 <div class="text-center mt-1">
-                    <a href="{% url 'home' %}"
+                    <a href="{% url 'housing:home_feed' %}"
                         class="text-sm text-gray-500 hover:text-red-500 font-medium transition duration-200">
                         Clear Filters
                     </a>
@@ -136,7 +136,13 @@
                         </svg>
                         Contact Agent on WhatsApp
                     </a>
+                    <button
+                        onclick="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{% url 'housing:house_detail' house.id %}'); alert('Link copied to clipboard!');"
+                        class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition duration-200">
+                        🔗 Copy Shareable Link
+                    </button>
                 </div>
+            </div>
             </div>
         </article>
 
