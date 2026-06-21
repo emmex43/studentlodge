@@ -1,11 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ house.title }} - studentlodge.ng</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+        /* Apply the new professional font to the whole website */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+
 </head>
 
 <body class="bg-gray-50 min-h-screen flex justify-center pb-10">
@@ -15,8 +23,8 @@
         <div class="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10">
             <a href="{% url 'housing:home_feed' %}" class="text-blue-600 font-semibold flex items-center gap-1">
                 &larr; Back to Feed
-            </a>
-            <h1 class="text-xl font-bold text-blue-600">studentlodge<span class="text-gray-800">.ng</span></h1>
+            </a>        
+    <img src="{% static 'images/logo.png' %}" alt="StudentLodge Logo" style="height: 70px; width: auto;">
         </div>
 
         <div class="relative bg-black w-full h-[500px] sm:h-[600px]">
