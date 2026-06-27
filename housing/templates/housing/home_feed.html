@@ -46,14 +46,13 @@
 </div>
 
 <!-- House Listings -->
-{% for house in houses %}
+{% for house in page_obj %}
 <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition hover:shadow-md">
-    <div class="relative bg-black w-full h-[400px] sm:h-[500px]">
-        <video class="w-full h-full object-contain" controls preload="metadata" playsinline>
-            <source src="{{ house.video.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+    <div class="relative bg-gray-50 border-b border-gray-100 w-full h-[400px] sm:h-[500px]">
+    <video class="w-full h-full object-contain" controls preload="metadata" playsinline>
+        <source src="{{ house.video.url }}" type="video/mp4">
+    </video>
+</div>
     <div class="p-5 sm:p-7">
         <div class="flex justify-between items-start mb-3 gap-4">
             <div>
@@ -104,4 +103,40 @@
     <p class="mt-2 text-gray-500">Check back soon for new student apartments.</p>
 </div>
 {% endfor %}
+<!-- Production-Ready Pagination Controls -->
+{% if page_obj.has_other_pages %}
+<div class="mt-10 mb-8 flex justify-center">
+    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+        
+        <!-- Previous Button -->
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_location %}&location={{ selected_location }}{% endif %}" 
+               class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors">
+                Previous
+            </a>
+        {% else %}
+            <span class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-200 bg-gray-50 text-sm font-medium text-gray-400 cursor-not-allowed">
+                Previous
+            </span>
+        {% endif %}
+
+        <!-- Current Page Info -->
+        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        <!-- Next Button -->
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_location %}&location={{ selected_location }}{% endif %}" 
+               class="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors">
+                Next
+            </a>
+        {% else %}
+            <span class="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-200 bg-gray-50 text-sm font-medium text-gray-400 cursor-not-allowed">
+                Next
+            </span>
+        {% endif %}
+    </nav>
+</div>
+{% endif %}
 {% endblock %}

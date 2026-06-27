@@ -4,6 +4,7 @@ from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 # 1. AGENT MODEL
 class Agent(models.Model):
@@ -17,6 +18,14 @@ class Agent(models.Model):
     def __str__(self):
         return self.name
 
+# 2. Add this validation function
+def validate_video_size(value):
+    filesize = value.size
+    # Set limit to 10 Megabytes (10 * 1024 * 1024 bytes)
+    limit_mb = 10 
+    if filesize > limit_mb * 1024 * 1024:
+        raise ValidationError(f"Maximum video size is {limit_mb}MB. Please compress your video.")
+
 
 # 2. HOUSE MODEL
 class House(models.Model):
@@ -28,7 +37,7 @@ class House(models.Model):
     location = models.CharField(max_length=200, help_text="e.g., BDPA, Ugbowo")
     
     # Cloudinary Video Field
-    video = CloudinaryField('video', resource_type='video', folder='studentlodge_videos/')
+    video = CloudinaryField('video', resource_type='video',folder='studentlodge_videos/', validators=[validate_video_size])
     
     # Link the house to a specific agent
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name='houses')

@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
+from django.core.paginator import Paginator
 
 # housing/views.py
 
@@ -43,7 +44,6 @@ def home_feed(request):
     houses = House.objects.filter(is_available=True).order_by('-created_at')
 
     # Grab a list of all unique locations currently in the database
-    # We use 'set' to remove any duplicates, so the dropdown looks clean
     all_locations = set(houses.values_list('location', flat=True))
 
     # Listen for data coming from the search bar (GET request)
@@ -60,9 +60,15 @@ def home_feed(request):
     if location:
         houses = houses.filter(location__iexact=location)
 
-    # Pass the filtered houses and search terms back to the frontend
+    # --- NEW PAGINATION LOGIC ---
+    # Paginate the filtered houses (6 per page)
+    paginator = Paginator(houses, 6) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Pass the paginated objects (page_obj) and search terms back to the frontend
     context = {
-        'houses': houses,
+        'page_obj': page_obj,  # <-- CHANGED: We now pass page_obj instead of houses
         'all_locations': all_locations,
         'query': query,
         'selected_location': location
