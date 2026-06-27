@@ -129,11 +129,18 @@ cloudinary.config(
     timeout = 600
 )
 
-# settings.py 
 
-# Real SMTP Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+# Safely get variables, defaulting to local testing values if missing on Render
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-local-secret-key')
+
+# Safely parse the ALLOWED_HOSTS string into a list
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = allowed_hosts_env.split(',')
+
+# Email Configuration
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 EMAIL_PORT = 587                    
 EMAIL_USE_TLS = True        
 # We use environment variables so your real password is never exposed in your code
