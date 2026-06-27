@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'housing',
     'jazzmin',
     'cloudinary',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -138,12 +139,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-local-secret-key')
 allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
-# Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# We will force it to use smtp.gmail.com as the default fallback
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# Email Configuration - Bypassing SMTP with Brevo HTTP API
+EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+ANYMAIL = {
+    # We will securely fetch this from Render
+    "BREVO_API_KEY": os.environ.get("BREVO_API_KEY"),
+}
+
+# Set this to the exact Gmail address you verified on Brevo
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
