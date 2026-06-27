@@ -140,10 +140,10 @@ ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # This is the crucial line that was missing!
+# We will force it to use smtp.gmail.com as the default fallback
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# Safely fetch credentials from Render environment variables
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
