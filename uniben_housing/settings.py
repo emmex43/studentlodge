@@ -139,10 +139,11 @@ allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 # Email Configuration
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
-EMAIL_PORT = 587                    
-EMAIL_USE_TLS = True        
-# We use environment variables so your real password is never exposed in your code
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # This is the crucial line that was missing!
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Safely fetch credentials from Render environment variables
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
