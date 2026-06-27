@@ -88,10 +88,33 @@ class House(models.Model):
         return f"{base_url}?text={encoded_message}"
 
 
-# 3. SUBSCRIBER MODEL
+# housing/models.py
+# (Ensure send_mail and settings are imported at the top of the file, which they should be based on your previous code)
+
 class Subscriber(models.Model):
     email = models.EmailField(unique=True)
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        # 1. Check if this is a new subscriber before saving
+        is_new = self.pk is None
+        
+        # 2. Save the subscriber to the database
+        super().save(*args, **kwargs)
+        
+        # 3. If they are new, send them a welcome email
+        if is_new:
+            try:
+                send_mail(
+                    subject="Welcome to the Studentlodge Newsletter!",
+                    message="Hi there,\n\nThank you for subscribing to Studentlodge! You will now be the first to know when we upload new, affordable accommodations.\n\nBest regards,\nThe Studentlodge Team",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[self.email],
+                    fail_silently=True, 
+                )
+            except Exception as e:
+                # This prints to your Render server logs if it fails, making debugging easy
+                print(f"Could not send welcome email to {self.email}: {e}")

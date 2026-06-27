@@ -134,10 +134,8 @@ cloudinary.config(
 # Real SMTP Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465               
-EMAIL_USE_SSL = True           # Added this line to enable SSL
-EMAIL_USE_TLS = False          # Ensure TLS is explicitly turned off
-
-# My Gmail account
-EMAIL_HOST_USER = 'adminstudentlodge@gmail.com' 
-EMAIL_HOST_PASSWORD = 'ieckiplitiniawtc'
+EMAIL_PORT = 587                    
+EMAIL_USE_TLS = True        
+# We use environment variables so your real password is never exposed in your code
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
