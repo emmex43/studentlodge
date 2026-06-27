@@ -1,8 +1,11 @@
 from django.db import models
 from urllib.parse import quote
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 
-
+# 1. AGENT MODEL
 class Agent(models.Model):
     name = models.CharField(max_length=100)
     # WhatsApp number should include the country code without the '+' sign
@@ -15,6 +18,7 @@ class Agent(models.Model):
         return self.name
 
 
+# 2. HOUSE MODEL
 class House(models.Model):
     title = models.CharField(
         max_length=200, help_text="e.g., 2-Bedroom Apartment in Ekosodin")
@@ -22,18 +26,42 @@ class House(models.Model):
         help_text="Details about water, electricity, security, etc.")
     price = models.CharField(max_length=100, help_text="e.g., ₦150,000 / year")
     location = models.CharField(max_length=200, help_text="e.g., BDPA, Ugbowo")
-
-    # We will upload videos to a specific folder.
-    # Later, we will configure this to use Cloudinary or AWS S3 for production.
-    # We tell Cloudinary specifically to expect a 'video' resource
-    video = CloudinaryField('video', resource_type='video',
-                            folder='studentlodge_videos/')
+    
+    # Cloudinary Video Field
+    video = CloudinaryField('video', resource_type='video', folder='studentlodge_videos/')
+    
     # Link the house to a specific agent
-    agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name='houses')
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name='houses')
+    
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
+    def save(self, *args, **kwargs):
+        # Check if this is a brand new house (it won't have an ID yet)
+        is_new = self.pk is None 
+        
+        # Save the house to the database first
+        super().save(*args, **kwargs)
+        
+        # If it is a new house, send the update emails
+        if is_new:
+            # Grab all subscribers
+            subscribers = Subscriber.objects.all()
+            
+            # Loop through them and send an email one by one to protect their privacy
+            for sub in subscribers:
+                try:
+                    send_mail(
+                        subject=f"New Listing: {self.title}",
+                        message=f"Hi!\n\nWe just uploaded a new property on Studentlodge.ng.\n\nLocation: {self.location}\nPrice: {self.price}\n\nVisit the site to check out the video and contact the agent before it's gone!\n\nBest regards,\nThe Team",
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[sub.email],
+                        fail_silently=True, # Prevents your admin panel from crashing if an email fails
+                    )
+                except Exception as e:
+                    print(f"Could not send email to {sub.email}: {e}")
+    # --------------------------------
+     
     def __str__(self):
         return f"{self.title} - {self.location}"
 
@@ -44,3 +72,12 @@ class House(models.Model):
         message = f"Hello {self.agent.name}, I found your listing on the housing portal. Is the {self.title} at {self.location} still available?"
         encoded_message = quote(message)
         return f"{base_url}?text={encoded_message}"
+
+
+# 3. SUBSCRIBER MODEL
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

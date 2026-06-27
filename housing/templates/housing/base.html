@@ -1,0 +1,100 @@
+<!-- housing/templates/housing/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>studentlodge.ng | Find Your Perfect Space</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 antialiased">
+   <!-- Your sticky navbar with the cropped Canva logo and new Contact link -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- flex justify-between pushes the logo to the left and the link to the right -->
+            <div class="flex justify-between items-center py-3">
+                
+                <!-- LEFT SIDE: The Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="{% url 'housing:home_feed' %}" class="block">
+                        <img src="{% static 'images/logo.png' %}" alt="StudentLodge Logo" class="h-12 sm:h-16 w-auto object-contain">
+                    </a>
+                </div>
+
+               <!-- RIGHT SIDE: The Contact Button -->
+                <div class="flex items-center">
+                    <!-- Added background, padding, rounded corners, and a hover effect -->
+                    <a href="{% url 'housing:contact' %}" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm sm:text-base transition-colors duration-200 px-4 py-2 rounded-lg border border-blue-200">
+                        Contact Us
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+<!-- Django Messages Banner -->
+    {% if messages %}
+    <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-3 pointer-events-none">
+        {% for message in messages %}
+        <!-- Tailwind styles map to Django message tags (success=green, error=red, etc.) -->
+        <div class="px-6 py-3 rounded-lg shadow-xl text-white text-sm font-semibold transition-opacity duration-500 pointer-events-auto
+            {% if message.tags == 'success' %} bg-green-500 
+            {% elif message.tags == 'error' %} bg-red-500 
+            {% else %} bg-blue-500 {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Script to auto-hide the message after 5 seconds -->
+    <script>
+        setTimeout(function() {
+            const toast = document.getElementById('toast-container');
+            if (toast) {
+                toast.style.opacity = '0'; // Start fade out
+                setTimeout(() => toast.remove(), 500); // Remove from DOM after fade
+            }
+        }, 5000);
+    </script>
+    {% endif %}
+
+    <!-- This is the magic block! Django will inject the content of other pages right here -->
+    <main class="max-w-2xl mx-auto px-4 py-8 space-y-10">
+        {% block content %}
+        {% endblock %}
+    </main>
+<!-- Footer with Subscription Box -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-10">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Join the Studentlodge Newsletter</h3>
+            <p class="text-gray-500 text-sm mb-6">Get the latest accommodation updates directly in your inbox.</p>
+            
+            <form method="POST" action="{% url 'housing:subscribe' %}" class="flex flex-col sm:flex-row justify-center max-w-md mx-auto gap-3">
+                {% csrf_token %}
+                <label for="newsletter-email" class="sr-only">Email address</label>
+                <input type="email" name="email" id="newsletter-email" required placeholder="Enter your email" 
+                    class="flex-grow px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <button type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors whitespace-nowrap">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </footer>
+</body>
+
+</html>
