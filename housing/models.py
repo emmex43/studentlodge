@@ -18,14 +18,19 @@ class Agent(models.Model):
     def __str__(self):
         return self.name
 
-# 2. Add this validation function
-def validate_video_size(value):
-    filesize = value.size
-    # Set limit to 10 Megabytes (10 * 1024 * 1024 bytes)
-    limit_mb = 10 
-    if filesize > limit_mb * 1024 * 1024:
-        raise ValidationError(f"Maximum video size is {limit_mb}MB. Please compress your video.")
+# housing/models.py
 
+def validate_video_size(value):
+    # Check if the incoming value is a new file with a 'size' attribute
+    if hasattr(value, 'size'):
+        filesize = value.size
+        # Set limit to 10 Megabytes (10 * 1024 * 1024 bytes)
+        limit_mb = 10 
+        if filesize > limit_mb * 1024 * 1024:
+            raise ValidationError(f"Maximum video size is {limit_mb}MB. Please compress your video.")
+    
+    # If it doesn't have a 'size' attribute, it's likely an already uploaded 
+    # CloudinaryResource being edited, so we safely bypass the check.
 
 # 2. HOUSE MODEL
 class House(models.Model):
