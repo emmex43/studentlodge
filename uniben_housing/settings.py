@@ -140,6 +140,14 @@ allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 
+# Force all HTTP traffic to safely redirect to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Ensure security cookies are only sent over encrypted connections
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
 EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
 
 ANYMAIL = {
