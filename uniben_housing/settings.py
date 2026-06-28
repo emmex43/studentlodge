@@ -139,13 +139,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-local-secret-key')
 allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
-# Email Configuration - Bypassing SMTP with Brevo HTTP API
+
 EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
 
 ANYMAIL = {
-    # We will securely fetch this from Render
+    # This must perfectly match the spelling in your Render Environment tab
     "BREVO_API_KEY": os.environ.get("BREVO_API_KEY"),
 }
 
-# Set this to the exact Gmail address you verified on Brevo
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
