@@ -16,22 +16,25 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-         name = form.cleaned_data['name']
-         user_email = form.cleaned_data['email']
-         message = form.cleaned_data['message']
-        
-         full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
-        
-        # The ultimate solution: Send FROM the trusted domain, TO your Gmail
-         email_msg = EmailMessage(
-            subject=f"New Contact Form Submission from {name}",
-            body=full_message,
-            from_email=settings.DEFAULT_FROM_EMAIL, # This safely uses admin@studentlodge.com.ng
-            to=['adminstudentlodge@gmail.com'], # <--- Route directly to your existing free Gmail
-            reply_to=[user_email], # When you click "Reply" in Gmail, it still emails the student!
-        )
-        
-        email_msg.send(fail_silently=False)
+            name = form.cleaned_data['name']
+            user_email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
+
+            # The ultimate solution: Send FROM the trusted domain, TO your Gmail
+            email_msg = EmailMessage(
+                subject=f"New Contact Form Submission from {name}",
+                body=full_message,
+                # This safely uses admin@studentlodge.com.ng
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                # <--- Route directly to your existing free Gmail
+                to=['adminstudentlodge@gmail.com'],
+                # When you click "Reply" in Gmail, it still emails the student!
+                reply_to=[user_email],
+            )
+
+            email_msg.send(fail_silently=False)
 
             messages.success(
                 request, 'Your message has been sent successfully! We will get back to you soon.')
@@ -65,7 +68,7 @@ def home_feed(request):
 
     # --- NEW PAGINATION LOGIC ---
     # Paginate the filtered houses (6 per page)
-    paginator = Paginator(houses, 6) 
+    paginator = Paginator(houses, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -88,13 +91,14 @@ def house_detail(request, id):
 
     return render(request, 'housing/house_detail.html', {'house': house})
 
+
 def subscribe_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         if email:
             # get_or_create returns a tuple: (the object, a boolean if it was newly created)
             subscriber, created = Subscriber.objects.get_or_create(email=email)
-            
+
             # Only send the email if they are a brand new subscriber
             if created:
                 try:
@@ -103,13 +107,14 @@ def subscribe_view(request):
                         message="Hi there,\n\nThank you for subscribing! We will keep you updated with the newest and most affordable accommodations right in your inbox.\n\nBest regards,\nThe Team",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[email],
-                        fail_silently=False, 
+                        fail_silently=False,
                     )
                 except Exception as e:
                     # If the email fails (e.g., no internet), we just print the error but still show the success message on the site
                     print(f"Error sending welcome email: {e}")
-            
+
             # Display the UI banner
-            messages.success(request, "Thanks for subscribing! We will keep you updated.")
-            
+            messages.success(
+                request, "Thanks for subscribing! We will keep you updated.")
+
     return redirect(request.META.get('HTTP_REFERER', 'housing:home_feed'))
