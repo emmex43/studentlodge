@@ -3,7 +3,6 @@ from django.db.models import Q
 from .models import House, Subscriber
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
 from django.core.paginator import Paginator
@@ -16,25 +15,22 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            user_email = form.cleaned_data['email']
-            message = form.cleaned_data['message']
-
-            full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
-
-            # The ultimate solution: Send FROM the trusted domain, TO your Gmail
-            email_msg = EmailMessage(
-                subject=f"New Contact Form Submission from {name}",
-                body=full_message,
-                # This safely uses admin@studentlodge.com.ng
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                # <--- Route directly to your existing free Gmail
-                to=['adminstudentlodge@gmail.com'],
-                # When you click "Reply" in Gmail, it still emails the student!
-                reply_to=[user_email],
-            )
-
-            email_msg.send(fail_silently=False)
+        name = form.cleaned_data['name']
+        user_email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+        
+        full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
+        
+        # Hardcoding the from_email guarantees Brevo receives the sender parameter
+        email_msg = EmailMessage(
+            subject=f"New Contact Form Submission from {name}",
+            body=full_message,
+            from_email='admin@studentlodge.com.ng', # <-- Update this line right here!
+            to=['adminstudentlodge@gmail.com'], 
+            reply_to=[user_email], 
+        )
+        
+        email_msg.send(fail_silently=False)
 
             messages.success(
                 request, 'Your message has been sent successfully! We will get back to you soon.')
