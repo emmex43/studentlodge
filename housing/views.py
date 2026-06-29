@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
 from django.core.paginator import Paginator
+from django.core.mail import EmailMessage
 
 # housing/views.py
 
