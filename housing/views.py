@@ -16,11 +16,11 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-        name = form.cleaned_data['name']
-        user_email = form.cleaned_data['email']
-        message = form.cleaned_data['message']
+         name = form.cleaned_data['name']
+         user_email = form.cleaned_data['email']
+         message = form.cleaned_data['message']
         
-        full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
+         full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
         
         # The ultimate solution: Send FROM the trusted domain, TO your Gmail
         email_msg = EmailMessage(
