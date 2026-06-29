@@ -1,12 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from .models import House, Subscriber
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.contrib import messages
 from .forms import ContactForm
 from django.core.paginator import Paginator
-from django.core.mail import EmailMessage
 
 # housing/views.py
 
@@ -15,22 +13,22 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-        name = form.cleaned_data['name']
-        user_email = form.cleaned_data['email']
-        message = form.cleaned_data['message']
-        
-        full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
-        
-        # Hardcoding the from_email guarantees Brevo receives the sender parameter
-        email_msg = EmailMessage(
-            subject=f"New Contact Form Submission from {name}",
-            body=full_message,
-            from_email='admin@studentlodge.com.ng', # <-- Update this line right here!
-            to=['adminstudentlodge@gmail.com'], 
-            reply_to=[user_email], 
-        )
-        
-        email_msg.send(fail_silently=False)
+            name = form.cleaned_data['name']
+            user_email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
+
+            # Hardcoding the from_email guarantees Brevo receives the sender parameter
+            email_msg = EmailMessage(
+                subject=f"New Contact Form Submission from {name}",
+                body=full_message,
+                from_email='admin@studentlodge.com.ng',  # <-- Update this line right here!
+                to=['adminstudentlodge@gmail.com'],
+                reply_to=[user_email],
+            )
+
+            email_msg.send(fail_silently=False)
 
             messages.success(
                 request, 'Your message has been sent successfully! We will get back to you soon.')
