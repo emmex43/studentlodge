@@ -15,20 +15,22 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            message = form.cleaned_data['message']
-
-            # Construct the email
-            full_message = f"New message from: {name} ({email})\n\nMessage:\n{message}"
-
-            send_mail(
-                subject=f"New Contact Form Submission from {name}",
-                message=full_message,
-                from_email='adminstudentlodge@gmail.com', # MUST MATCH your EMAIL_HOST_USER
-                recipient_list=['adminstudentlodge@gmail.com'], # Where you want to receive it
-                fail_silently=False,
-            )
+        name = form.cleaned_data['name']
+        user_email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+        
+        full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
+        
+        # Send using the verified Brevo address
+        email_msg = EmailMessage(
+            subject=f"New Contact Form Submission from {name}",
+            body=full_message,
+            from_email=settings.DEFAULT_FROM_EMAIL, 
+            to=['admin@studentlodge.com.ng'], 
+            reply_to=[user_email], 
+        )
+        
+        email_msg.send(fail_silently=False)
 
             messages.success(
                 request, 'Your message has been sent successfully! We will get back to you soon.')
