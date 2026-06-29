@@ -23,7 +23,7 @@ def contact_view(request):
          full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
         
         # The ultimate solution: Send FROM the trusted domain, TO your Gmail
-        email_msg = EmailMessage(
+         email_msg = EmailMessage(
             subject=f"New Contact Form Submission from {name}",
             body=full_message,
             from_email=settings.DEFAULT_FROM_EMAIL, # This safely uses admin@studentlodge.com.ng
