@@ -22,13 +22,13 @@ def contact_view(request):
         
         full_message = f"New message from: {name} ({user_email})\n\nMessage:\n{message}"
         
-        # Send using the verified Brevo address
+        # The ultimate solution: Send FROM the trusted domain, TO your Gmail
         email_msg = EmailMessage(
             subject=f"New Contact Form Submission from {name}",
             body=full_message,
-            from_email=settings.DEFAULT_FROM_EMAIL, 
-            to=['admin@studentlodge.com.ng'], 
-            reply_to=[user_email], 
+            from_email=settings.DEFAULT_FROM_EMAIL, # This safely uses admin@studentlodge.com.ng
+            to=['adminstudentlodge@gmail.com'], # <--- Route directly to your existing free Gmail
+            reply_to=[user_email], # When you click "Reply" in Gmail, it still emails the student!
         )
         
         email_msg.send(fail_silently=False)
