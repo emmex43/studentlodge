@@ -1,6 +1,7 @@
 # housing/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q, post_save
+from django.db.models import Q
+from django.db.models.signals import post_save
 from .models import House, Subscriber
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
