@@ -100,7 +100,7 @@ def subscribe_view(request):
                 }
 
                 # Render the HTML and define the plain text fallback
-                html_content = render_to_string('welcome_email.html', context)
+                html_content = render_to_string('housing/welcome_email.html', context)
                 text_content = "Welcome to Studentlodge! Thank you for subscribing. We will keep you updated on the best accommodations around campus."
 
                 # Construct the multipart message
