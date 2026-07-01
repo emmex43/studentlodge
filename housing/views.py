@@ -1,6 +1,6 @@
 # housing/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
+from django.db.models import Q, post_save
 from .models import House, Subscriber
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -8,6 +8,7 @@ from django.contrib import messages
 from .forms import ContactForm
 from django.core.paginator import Paginator
 from anymail.exceptions import AnymailAPIError
+from django.dispatch import receiver
 
 
 def contact_view(request):
