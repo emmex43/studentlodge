@@ -156,3 +156,9 @@ ANYMAIL = {
 }
 
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
+
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
+
+# Optional but recommended: Forces the reCAPTCHA widget to use the dark or light theme
+RECAPTCHA_THEME = 'light'
