@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'jazzmin',
     'cloudinary',
     'anymail',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
