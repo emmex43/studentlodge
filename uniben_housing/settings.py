@@ -27,6 +27,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'housing',
-    'jazzmin',
     'cloudinary',
     'anymail',
     'django_recaptcha',
@@ -163,3 +163,36 @@ RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
 # Optional but recommended: Forces the reCAPTCHA widget to use the dark or light theme
 RECAPTCHA_THEME = 'light'
+
+# JAZZMIN ADMIN DASHBOARD SETTINGS
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Studentlodge Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Studentlodge",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Studentlodge",
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to the Studentlodge Dashboard",
+
+    # Copyright on the footer
+    "copyright": "Studentlodge Ltd",
+
+    # Hide these apps when generating side menu e.g (auth)
+    "hide_apps": [],
+
+    # Hide these models when generating side menu (e.g auth.user)
+    "hide_models": [],
+    
+    # Change the default icon for your models (use FontAwesome icon classes)
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "housing.House": "fas fa-home",
+        "housing.Subscriber": "fas fa-envelope",
+    },
+}
