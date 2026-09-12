@@ -1,0 +1,21 @@
+{
+  "name": "Studentlodge",
+  "short_name": "Studentlodge",
+  "description": "Premium Student Accommodation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb", 
+  "icons": [
+    {
+      "src": "/static/icons/logo 4.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/logo 5.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
