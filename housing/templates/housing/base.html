@@ -11,6 +11,12 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KTDXV8WX');</script>
     <!-- End Google Tag Manager -->
+     
+
+    <!-- Link to the PWA Manifest -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <!-- Sets the color of the browser address bar -->
+    <meta name="theme-color" content="#2563eb">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +41,7 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
@@ -81,6 +88,21 @@
         </div>
         {% endfor %}
     </div>
+    
+    <!-- Register the Service Worker -->
+    <script>
+        // Check if the browser supports service workers
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Register the sw.js file
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('Service Worker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('Service Worker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 
     <!-- Script to auto-hide the message after 5 seconds -->
     <script>
