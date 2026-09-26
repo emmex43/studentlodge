@@ -6,15 +6,10 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
 
 from anymail.exceptions import AnymailAPIError
 
-# Make sure SavedListing is imported here!
-from .models import House, Subscriber
-from accounts.models import StudentProfile
+from .models import House, Subscriber 
 from .forms import ContactForm
 
 
