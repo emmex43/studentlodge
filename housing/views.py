@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from anymail.exceptions import AnymailAPIError
 
 # Make sure SavedListing is imported here!
-from .models import House, Subscriber, SavedListing 
+from .models import House, Subscriber
 from accounts.models import StudentProfile
 from .forms import ContactForm
 
