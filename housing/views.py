@@ -109,28 +109,5 @@ def subscribe_view(request):
     return redirect(request.META.get('HTTP_REFERER', 'housing:home_feed'))
 
 
-# --- SAVED LISTINGS FEATURE ---
-@login_required
-@require_POST
-def toggle_save_listing(request, house_id):
-    """
-    Toggles a listing's saved state for the currently logged-in student.
-    Returns a JSON response so the frontend can update the heart icon without reloading.
-    """
-    try:
-        student_profile = request.user.studentprofile
-        house = House.objects.get(id=house_id)
-        
-        saved_record = SavedListing.objects.filter(student=student_profile, listing=house).first()
-        
-        if saved_record:
-            saved_record.delete()
-            return JsonResponse({'status': 'unsaved', 'message': 'Removed from saved listings.'})
-        else:
-            SavedListing.objects.create(student=student_profile, listing=house)
-            return JsonResponse({'status': 'saved', 'message': 'Listing saved successfully.'})
-            
-    except House.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Listing not found.'}, status=404)
-    except Exception as e:
+
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
