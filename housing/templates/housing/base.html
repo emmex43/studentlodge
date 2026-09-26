@@ -3,15 +3,19 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KTDXV8WX');</script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-KTDXV8WX');</script>
     <!-- End Google Tag Manager -->
-     
+
     <!-- Link to the PWA Manifest -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <!-- Sets the color of the browser address bar -->
@@ -22,13 +26,16 @@
     <title>Studentlodge | Premium Student Accommodation in UNIBEN, Ekosodin, BDPA, Osasogie</title>
     <meta name="google-site-verification" content="ppv1jR_48m3jBN7Hpf7r18OoudWmAPwIjVUOivTHOr8" />
     <meta name="title" content="Studentlodge | Premium Student Accommodation in UNIBEN & Ekosodin">
-    <meta name="description" content="Find the best student accommodation, self-cons, and lodges around UNIBEN, Ekosodin, BDPA, Osasogie and Benin City. Stress-free housing for students.">
-    <meta name="keywords" content="student accommodation UNIBEN, lodge Ekosodin, student housing Benin City, UNIBEN hostels, self-con in Ekosodin, BDPA lodges,Osasogie lodges, UNIBEN off-campus accommodation">
+    <meta name="description"
+        content="Find the best student accommodation, self-cons, and lodges around UNIBEN, Ekosodin, BDPA, Osasogie and Benin City. Stress-free housing for students.">
+    <meta name="keywords"
+        content="student accommodation UNIBEN, lodge Ekosodin, student housing Benin City, UNIBEN hostels, self-con in Ekosodin, BDPA lodges,Osasogie lodges, UNIBEN off-campus accommodation">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://studentlodge.com.ng/">
     <meta property="og:title" content="Studentlodge | UNIBEN Student Housing">
-    <meta property="og:description" content="Find the best student accommodation, self-cons, and lodges around UNIBEN and Ekosodin.">
+    <meta property="og:description"
+        content="Find the best student accommodation, self-cons, and lodges around UNIBEN and Ekosodin.">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,100 +47,131 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
-   <!-- Your sticky navbar with Hamburger Menu -->
-<nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-3">
-            
-            <!-- LEFT SIDE: The Logo -->
-            <div class="flex-shrink-0 flex items-center">
-                <a href="{% url 'housing:home_feed' %}" class="block">
-                    <img src="{% static 'images/logo.png' %}" alt="StudentLodge Logo" class="h-12 sm:h-16 w-auto object-contain">
-                </a>
-            </div>
+    <!-- Your sticky navbar with Hamburger Menu -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
 
-            <!-- RIGHT SIDE: Desktop Navigation (Hidden on Mobile) -->
-            <div class="hidden sm:flex items-center gap-3">
-                <a href="{% url 'housing:contact' %}" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold transition-colors duration-200 px-4 py-2 rounded-lg border border-blue-200">
-                    Contact Us
-                </a>
+                <!-- LEFT SIDE: The Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="{% url 'housing:home_feed' %}" class="block">
+                        <img src="{% static 'images/logo.png' %}" alt="StudentLodge Logo"
+                            class="h-12 sm:h-16 w-auto object-contain">
+                    </a>
+                </div>
 
-                {% if user.is_authenticated %}
+                <!-- RIGHT SIDE: Desktop Navigation (Hidden on Mobile) -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <a href="{% url 'housing:contact' %}"
+                        class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold transition-colors duration-200 px-4 py-2 rounded-lg border border-blue-200">
+                        Contact Us
+                    </a>
+
+                    {% if user.is_authenticated %}
                     <span class="text-gray-600 font-medium">
                         Hi, {{ user.first_name|default:user.username }}
                     </span>
                     <form method="post" action="{% url 'account_logout' %}" class="m-0">
                         {% csrf_token %}
-                        <button type="submit" class="text-red-600 hover:bg-red-50 hover:text-red-700 font-semibold transition-colors duration-200 px-3 py-2 rounded-lg border border-red-200">
+                        <button type="submit"
+                            class="text-red-600 hover:bg-red-50 hover:text-red-700 font-semibold transition-colors duration-200 px-3 py-2 rounded-lg border border-red-200">
                             Logout
                         </button>
                     </form>
-                {% else %}
-                    <a href="{% provider_login_url 'google' %}" class="flex items-center bg-white border border-gray-300 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                    {% else %}
+                    <a href="{% provider_login_url 'google' %}"
+                        class="flex items-center bg-white border border-gray-300 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
                         <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="mr-2">
-                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                            <path fill="#EA4335"
+                                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z">
+                            </path>
+                            <path fill="#4285F4"
+                                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z">
+                            </path>
+                            <path fill="#FBBC05"
+                                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z">
+                            </path>
+                            <path fill="#34A853"
+                                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z">
+                            </path>
                         </svg>
                         Continue with Google
                     </a>
-                {% endif %}
-            </div>
+                    {% endif %}
+                </div>
 
-            <!-- MOBILE: Hamburger Menu Button (Hidden on Desktop) -->
-            <div class="flex items-center sm:hidden">
-                <button id="mobile-menu-btn" class="text-gray-500 hover:text-gray-700 focus:outline-none p-2">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <!-- 3 lines for the hamburger -->
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+                <!-- MOBILE: Hamburger Menu Button (Hidden on Desktop) -->
+                <div class="flex items-center sm:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-500 hover:text-gray-700 focus:outline-none p-2">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- 3 lines for the hamburger -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- MOBILE: Dropdown Container (Hidden by default) -->
-    <div id="mobile-menu" class="hidden sm:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0">
-        <div class="px-4 py-4 space-y-4">
-            
-            <a href="{% url 'housing:contact' %}" class="block text-center bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-4 py-3 rounded-lg border border-blue-200 w-full">
-                Contact Us
-            </a>
+        <!-- MOBILE: Dropdown Container (Hidden by default) -->
+        <div id="mobile-menu"
+            class="hidden sm:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0">
+            <div class="px-4 py-4 space-y-4">
 
-            {% if user.is_authenticated %}
+                <a href="{% url 'housing:contact' %}"
+                    class="block text-center bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-4 py-3 rounded-lg border border-blue-200 w-full">
+                    Contact Us
+                </a>
+
+                {% if user.is_authenticated %}
                 <div class="text-center text-gray-600 font-medium border-b border-gray-100 pb-2">
                     Hi, {{ user.first_name|default:user.username }}
                 </div>
                 <form method="post" action="{% url 'account_logout' %}" class="m-0">
                     {% csrf_token %}
-                    <button type="submit" class="block w-full text-center text-red-600 hover:bg-red-50 font-semibold px-4 py-3 rounded-lg border border-red-200">
+                    <button type="submit"
+                        class="block w-full text-center text-red-600 hover:bg-red-50 font-semibold px-4 py-3 rounded-lg border border-red-200">
                         Logout
                     </button>
                 </form>
-            {% else %}
-                <a href="{% provider_login_url 'google' %}" class="flex justify-center items-center bg-white border border-gray-300 rounded-lg px-4 py-3 font-medium text-gray-700 hover:bg-gray-50 w-full">
+                {% else %}
+                <a href="{% provider_login_url 'google' %}"
+                    class="flex justify-center items-center bg-white border border-gray-300 rounded-lg px-4 py-3 font-medium text-gray-700 hover:bg-gray-50 w-full">
                     <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="mr-2">
                         <!-- Same Google SVG path here -->
-                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                        <path fill="#EA4335"
+                            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z">
+                        </path>
+                        <path fill="#4285F4"
+                            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z">
+                        </path>
+                        <path fill="#FBBC05"
+                            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z">
+                        </path>
+                        <path fill="#34A853"
+                            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z">
+                        </path>
                     </svg>
                     Continue with Google
                 </a>
-            {% endif %}
-            
+                {% endif %}
+
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTDXV8WX"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTDXV8WX" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTDXV8WX" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Django Messages Banner -->
@@ -148,10 +186,10 @@
         </div>
         {% endfor %}
     </div>
-    
+
     <!-- Script to auto-hide the message after 5 seconds -->
     <script>
-        setTimeout(function() {
+        setTimeout(function () {
             const toast = document.getElementById('toast-container');
             if (toast) {
                 toast.style.opacity = '0'; // Start fade out
@@ -165,11 +203,11 @@
     <script>
         // Check if the browser supports service workers
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 // Register the sw.js file
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                navigator.serviceWorker.register('/sw.js').then(function (registration) {
                     console.log('Service Worker registration successful with scope: ', registration.scope);
-                }, function(err) {
+                }, function (err) {
                     console.log('Service Worker registration failed: ', err);
                 });
             });
@@ -181,19 +219,20 @@
         {% block content %}
         {% endblock %}
     </main>
-    
+
     <!-- Footer with Subscription Box -->
     <footer class="bg-white border-t border-gray-200 mt-12 py-10">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h3 class="text-lg font-bold text-gray-900 mb-2">Join the Studentlodge Newsletter</h3>
             <p class="text-gray-500 text-sm mb-6">Get the latest accommodation updates directly in your inbox.</p>
-            
-            <form method="POST" action="{% url 'housing:subscribe' %}" class="flex flex-col sm:flex-row justify-center max-w-md mx-auto gap-3">
+
+            <form method="POST" action="{% url 'housing:subscribe' %}"
+                class="flex flex-col sm:flex-row justify-center max-w-md mx-auto gap-3">
                 {% csrf_token %}
                 <label for="newsletter-email" class="sr-only">Email address</label>
-                <input type="email" name="email" id="newsletter-email" required placeholder="Enter your email" 
+                <input type="email" name="email" id="newsletter-email" required placeholder="Enter your email"
                     class="flex-grow px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                <button type="submit" 
+                <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors whitespace-nowrap">
                     Subscribe
                 </button>
@@ -201,18 +240,19 @@
         </div>
     </footer>
 
-<!-- Script for Hamburger Menu Toggle -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
+    <!-- Script for Hamburger Menu Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
 
-        btn.addEventListener('click', function() {
-            // Toggle the 'hidden' class to show or hide the menu
-            menu.classList.toggle('hidden');
+            btn.addEventListener('click', function () {
+                // Toggle the 'hidden' class to show or hide the menu
+                menu.classList.toggle('hidden');
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

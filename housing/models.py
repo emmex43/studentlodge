@@ -2,9 +2,11 @@ from django.db import models
 from urllib.parse import quote
 from cloudinary.models import CloudinaryField
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from anymail.exceptions import AnymailAPIError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -120,6 +122,7 @@ class Subscriber(models.Model):
             except Exception as e:
                 # This prints to your Render server logs if it fails, making debugging easy
                 print(f"Could not send welcome email to {self.email}: {e}")
+
 @receiver(post_save, sender=House)
 def notify_subscribers_of_new_listing(sender, instance, created, **kwargs):
     # Breadcrumb 1: Prove the signal woke up!
