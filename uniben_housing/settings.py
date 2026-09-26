@@ -225,4 +225,4 @@ JAZZMIN_SETTINGS = {
         "auth.Group": "fas fa-users",
         "housing.House": "fas fa-home",
         "housing.Subscriber": "fas fa-envelope",
-    },
+    }
