@@ -226,3 +226,4 @@ JAZZMIN_SETTINGS = {
         "housing.House": "fas fa-home",
         "housing.Subscriber": "fas fa-envelope",
     }
+}
