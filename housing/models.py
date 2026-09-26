@@ -5,6 +5,8 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # 1. AGENT MODEL
 class Agent(models.Model):
@@ -118,3 +120,45 @@ class Subscriber(models.Model):
             except Exception as e:
                 # This prints to your Render server logs if it fails, making debugging easy
                 print(f"Could not send welcome email to {self.email}: {e}")
+@receiver(post_save, sender=House)
+def notify_subscribers_of_new_listing(sender, instance, created, **kwargs):
+    # Breadcrumb 1: Prove the signal woke up!
+    print(f"SIGNAL FIRED: A house named '{instance.title}' was just saved.")
+    
+    if created:
+        print("STATUS: This is a brand new house. Attempting to send emails...")
+        subscriber_emails = list(Subscriber.objects.values_list('email', flat=True))
+        
+        if not subscriber_emails:
+            print("STATUS: No subscribers found in the database. Stopping.")
+            return 
+            
+        context = {
+            'listing_title': instance.title,
+            'listing_price': instance.price,
+            'listing_location': instance.location,
+            'listing_url': f"https://studentlodge.com.ng/house/{instance.id}/", 
+        }
+        
+        print("STATUS: Attempting to render the HTML template...")
+        html_content = render_to_string('housing/listing_update_email.html', context)
+        
+        text_content = f"New Listing: {instance.title} at {instance.location}. View it on Studentlodge!"
+        
+        msg = EmailMultiAlternatives(
+            subject=f"New Studentlodge Property: {instance.title} 🏠",
+            body=text_content,
+            from_email='admin@studentlodge.com.ng',
+            to=['admin@studentlodge.com.ng'], 
+            bcc=subscriber_emails 
+        )
+        msg.attach_alternative(html_content, "text/html")
+        
+        try:
+            print("STATUS: Handing email over to Brevo...")
+            msg.send(fail_silently=False)
+            print(f"SUCCESS: Notified {len(subscriber_emails)} subscribers!")
+        except AnymailAPIError as e:
+            print(f"Brevo API Error during mass listing update: {e}")
+    else:
+        print("STATUS: This was an existing house update. Skipping email to avoid spam.")

@@ -27,6 +27,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,8 +35,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'housing',
-    'jazzmin',
     'cloudinary',
+    'anymail',
+    'django_recaptcha',
+    # Required by allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google', # Google provider
+
+    # Your apps
+    'accounts', # Our new accounts app
 ]
 
 MIDDLEWARE = [
@@ -47,7 +58,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
+
+# Allauth Configuration
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
+# Skip standard signup forms and email verification to keep it zero-friction
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+LOGIN_REDIRECT_URL = '/' # Redirect back to home after login
+LOGOUT_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'uniben_housing.urls'
 
@@ -129,13 +155,74 @@ cloudinary.config(
     timeout = 600
 )
 
-# settings.py 
 
-# Real SMTP Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587                    
-EMAIL_USE_TLS = True        
-# We use environment variables so your real password is never exposed in your code
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+# Safely get variables, defaulting to local testing values if missing on Render
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-local-secret-key')
+
+# Safely parse the ALLOWED_HOSTS string into a list
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = allowed_hosts_env.split(',')
+
+
+# Keep SSL redirection enabled ONLY in production:
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+else:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+
+DEFAULT_FROM_EMAIL = 'admin@studentlodge.com.ng'
+EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
+
+ANYMAIL = {
+    # This must perfectly match the spelling in your Render Environment tab
+    "BREVO_API_KEY": os.environ.get("BREVO_API_KEY"),
+}
+
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
+
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
+
+# Optional but recommended: Forces the reCAPTCHA widget to use the dark or light theme
+RECAPTCHA_THEME = 'light'
+
+# JAZZMIN ADMIN DASHBOARD SETTINGS
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Studentlodge Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Studentlodge",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Studentlodge",
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to the Studentlodge Dashboard",
+
+    # Copyright on the footer
+    "copyright": "Studentlodge Ltd",
+
+    # Hide these apps when generating side menu e.g (auth)
+    "hide_apps": [],
+
+    # Hide these models when generating side menu (e.g auth.user)
+    "hide_models": [],
+    
+    # Change the default icon for your models (use FontAwesome icon classes)
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "housing.House": "fas fa-home",
+        "housing.Subscriber": "fas fa-envelope",
+    },
+}
