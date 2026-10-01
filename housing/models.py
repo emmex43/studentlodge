@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from anymail.exceptions import AnymailAPIError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from accounts.models import StudentProfile # Ensure this import exists
+
 
 # 1. AGENT MODEL
 class Agent(models.Model):
@@ -165,3 +167,14 @@ def notify_subscribers_of_new_listing(sender, instance, created, **kwargs):
             print(f"Brevo API Error during mass listing update: {e}")
     else:
         print("STATUS: This was an existing house update. Skipping email to avoid spam.")
+
+class SavedListing(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='saved_properties')
+    listing = models.ForeignKey(House, on_delete=models.CASCADE, related_name='favorited_by')
+    saved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'listing')
+
+    def __str__(self):
+        return f"{self.student.user.username} saved {self.listing.title}"
